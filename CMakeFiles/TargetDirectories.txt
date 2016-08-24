@@ -1,0 +1,3 @@
+/home/getupandgo/projects/FaceSwapper/CMakeFiles/edit_cache.dir
+/home/getupandgo/projects/FaceSwapper/CMakeFiles/rebuild_cache.dir
+/home/getupandgo/projects/FaceSwapper/CMakeFiles/FaceSwapper.dir
