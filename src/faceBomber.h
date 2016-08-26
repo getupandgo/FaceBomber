@@ -11,14 +11,16 @@
 
 class FaceBomber {
 public:
-    FaceBomber(std::string imagePath);
+    FaceBomber();
     void doFaceBomb();
+    void addImageToBomb(std::string imagePath);
     void addFaceForBombing(std::string faceName, std::string imagePath);
 private:
     // methods:
+    void getAllFacesForBombing();
     void extractFace(dlib::array2d<dlib::rgb_pixel> targetImage);
     // fields:
-    std::map facesForBombing <std::string, std::string>;
+    std::map <std::string, std::string> facesForBombing;
     dlib::array2d<dlib::rgb_pixel> targetImage;
     // Face detector to get bounding boxes for each face in an image.
     dlib::frontal_face_detector faceDetector;
