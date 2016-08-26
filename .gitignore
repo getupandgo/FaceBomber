@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/opencv,c++,linux,intellij,cmake
 
+### DLib ###
+*/dlib_build
+
+
 ### OpenCV ###
 #OpenCV for Mac and Linux
 #build and release folders
