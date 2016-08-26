@@ -123,32 +123,45 @@ FaceSwapper/fast:
 	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/build
 .PHONY : FaceSwapper/fast
 
-src/faceSwap.o: src/faceSwap.cpp.o
+#=============================================================================
+# Target rules for targets named dlib
 
-.PHONY : src/faceSwap.o
+# Build rule for target.
+dlib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 dlib
+.PHONY : dlib
+
+# fast build rule for target.
+dlib/fast:
+	$(MAKE) -f dlib_build/CMakeFiles/dlib.dir/build.make dlib_build/CMakeFiles/dlib.dir/build
+.PHONY : dlib/fast
+
+src/faceBomber.o: src/faceBomber.cpp.o
+
+.PHONY : src/faceBomber.o
 
 # target to build an object file
-src/faceSwap.cpp.o:
-	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/src/faceSwap.cpp.o
-.PHONY : src/faceSwap.cpp.o
+src/faceBomber.cpp.o:
+	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/src/faceBomber.cpp.o
+.PHONY : src/faceBomber.cpp.o
 
-src/faceSwap.i: src/faceSwap.cpp.i
+src/faceBomber.i: src/faceBomber.cpp.i
 
-.PHONY : src/faceSwap.i
+.PHONY : src/faceBomber.i
 
 # target to preprocess a source file
-src/faceSwap.cpp.i:
-	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/src/faceSwap.cpp.i
-.PHONY : src/faceSwap.cpp.i
+src/faceBomber.cpp.i:
+	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/src/faceBomber.cpp.i
+.PHONY : src/faceBomber.cpp.i
 
-src/faceSwap.s: src/faceSwap.cpp.s
+src/faceBomber.s: src/faceBomber.cpp.s
 
-.PHONY : src/faceSwap.s
+.PHONY : src/faceBomber.s
 
 # target to generate assembly for a file
-src/faceSwap.cpp.s:
-	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/src/faceSwap.cpp.s
-.PHONY : src/faceSwap.cpp.s
+src/faceBomber.cpp.s:
+	$(MAKE) -f CMakeFiles/FaceSwapper.dir/build.make CMakeFiles/FaceSwapper.dir/src/faceBomber.cpp.s
+.PHONY : src/faceBomber.cpp.s
 
 # Help Target
 help:
@@ -159,9 +172,10 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... FaceSwapper"
-	@echo "... src/faceSwap.o"
-	@echo "... src/faceSwap.i"
-	@echo "... src/faceSwap.s"
+	@echo "... dlib"
+	@echo "... src/faceBomber.o"
+	@echo "... src/faceBomber.i"
+	@echo "... src/faceBomber.s"
 .PHONY : help
 
 
