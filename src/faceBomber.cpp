@@ -1,16 +1,20 @@
 #include "faceBomber.h"
 
 FaceBomber::FaceBomber() : faceDetector(dlib::get_frontal_face_detector()) {
-    dlib::deserialize("./shape_predictor_model/shape_predictor_68_face_landmarks.dat") >> shapePredictor;
+    dlib::deserialize("/home/getupandgo/projects/FaceBomber/shape_predictor_model/shape_predictor_68_face_landmarks.dat") >> shapePredictor;
     getAllFacesForBombing();
 }
 
-void FaceBomber::doFaceBomb(std::string imagePath) {
+void FaceBomber::doFaceBomb(const std::string imagePath) {
     dlib::load_image(targetImage, imagePath);
 
     pyramid_up(targetImage);
 
     auto faceShapes = extractFacePoses(targetImage);
+
+    std::for_each(faceShapes.begin(), faceShapes.end(), [&](dlib::full_object_detection &faceShape) {
+        std::cout << dlibObjectDetectionToCvPointsArray(faceShape) << std::endl;
+    });
 
     dlib::image_window win;
 
@@ -22,13 +26,25 @@ void FaceBomber::doFaceBomb(std::string imagePath) {
     std::cin.get();
 }
 
-void FaceBomber::addFaceForBombing(std::string faceName, std::string imagePath) {
+void FaceBomber::addFaceForBombing(const std::string faceName, const std::string imagePath) {
     // read image
     dlib::array2d<dlib::rgb_pixel> faceToExtract;
     dlib::load_image(faceToExtract, imagePath);
 
-    // extract face ROI
-//    extractFace(faceToExtract); //assign somewhere
+    auto facePoseOfDetectedFace = extractFacePoses(faceToExtract);
+
+    if (facePoseOfDetectedFace.size() > 1) {
+        std::cout << "too many faces detected; it must be only one \n aborting ..." << std::endl;
+        throw "too many faces found";
+    }
+
+
+//    auto facePoints = dlibObjectDetectionToCvPointsArray(facePose);
+
+//    std::vector<int> hullContourIndexes;
+    // creating convexHull around facePoints obtained using dlib
+//    cv::convexHull(facePoints, hullContourIndexes, false, false);
+//    cv::convexHull(facePoints);
 
     bool faceExtracted = true;
     if (faceExtracted) {
@@ -48,7 +64,7 @@ void FaceBomber::getAllFacesForBombing() {
 
 std::vector<dlib::full_object_detection> FaceBomber::extractFacePoses(dlib::array2d<dlib::rgb_pixel> &targetImage) {
     // extract list of bounding boxes around all the faces
-    std::vector<dlib::rectangle> detectedFaces = faceDetector(targetImage); // TODO
+    std::vector<dlib::rectangle> detectedFaces = faceDetector(targetImage);
     std::cout << "Number of faces detected: " << detectedFaces.size() << std::endl;
 
     // Finding the pose of each detected face
@@ -60,4 +76,21 @@ std::vector<dlib::full_object_detection> FaceBomber::extractFacePoses(dlib::arra
     });
 
     return faceShapes;
+}
+
+cv::Point2i FaceBomber::fromDlibToCvPoint (const dlib::point &dlibPoint) {
+    return cv::Point2i(dlibPoint.x(), dlibPoint.y());
+};
+
+std::vector<cv::Point2i> FaceBomber::dlibObjectDetectionToCvPointsArray (const dlib::full_object_detection &objDetection) {
+    std::vector<cv::Point2i> cvPointsArray;
+    size_t objDetectionPointsNumber = objDetection.num_parts();
+    cvPointsArray.reserve(objDetectionPointsNumber);
+
+    for(unsigned long i = 0; i < objDetectionPointsNumber; ++i) {
+        dlib::point dlibPoint = objDetection.part(i);
+        cvPointsArray.push_back(fromDlibToCvPoint(dlibPoint));
+    }
+
+    return cvPointsArray;
 }

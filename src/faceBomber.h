@@ -12,12 +12,14 @@
 class FaceBomber {
 public:
     FaceBomber();
-    void doFaceBomb(std::string imagePath);
-    void addFaceForBombing(std::string faceName, std::string imagePath);
+    void doFaceBomb(const std::string imagePath);
+    void addFaceForBombing(const std::string faceName, const std::string imagePath);
 private:
     // methods:
     void getAllFacesForBombing();
     std::vector<dlib::full_object_detection> extractFacePoses(dlib::array2d<dlib::rgb_pixel> &targetImage);
+    cv::Point2i fromDlibToCvPoint(const dlib::point &dlibPoint);
+    std::vector<cv::Point2i> dlibObjectDetectionToCvPointsArray (const dlib::full_object_detection &objDetection);
     // fields:
     std::map <std::string, std::string> facesForBombing;
     dlib::array2d<dlib::rgb_pixel> targetImage;
