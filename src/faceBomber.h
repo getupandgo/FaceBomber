@@ -12,21 +12,21 @@
 class FaceBomber {
 public:
     FaceBomber();
-    void doFaceBomb(const std::string imagePath);
+    void doFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath);
     void addFaceForBombing(const std::string faceName, const std::string imagePath);
 private:
     // methods:
     void getAllFacesForBombing();
-    std::vector<dlib::full_object_detection> extractFacePoses(dlib::array2d<dlib::rgb_pixel> &targetImage);
+    void replaceFace(std::vector<cv::Point2i> currentFaceShapes, std::vector<cv::Point2i> maskFaceShapes);
+    std::vector<dlib::full_object_detection> findFacesAndExtractPoses(dlib::array2d<dlib::rgb_pixel> &targetImage);
     cv::Point2i fromDlibToCvPoint(const dlib::point &dlibPoint);
     std::vector<cv::Point2i> dlibObjectDetectionToCvPointsArray (const dlib::full_object_detection &objDetection);
+
     // fields:
     std::map <std::string, std::string> facesForBombing;
     dlib::array2d<dlib::rgb_pixel> targetImage;
-    // Face detector to get bounding boxes for each face in an image.
-    dlib::frontal_face_detector faceDetector;
-    // Tool for prediction face landmark positions from face bounding box.
-    dlib::shape_predictor shapePredictor;
+    dlib::frontal_face_detector faceDetector;       // Face detector to get bounding boxes for each face in an image.
+    dlib::shape_predictor shapePredictor;       // Tool for prediction face landmark positions from face bounding box.
 };
 
 #endif //FACEBOMBER_FACEBOMBER_H
