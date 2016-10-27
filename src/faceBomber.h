@@ -12,7 +12,8 @@
 class FaceBomber {
 public:
     FaceBomber();
-    void doFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath);
+    void doFancyFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath);
+    void doUglyFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath);
     void addFaceForBombing(const std::string faceName, const std::string imagePath);
 private:
     // methods:
@@ -24,7 +25,6 @@ private:
 
     // fields:
     std::map <std::string, std::string> facesForBombing;
-    dlib::array2d<dlib::rgb_pixel> targetImage;
     dlib::frontal_face_detector faceDetector;       // Face detector to get bounding boxes for each face in an image.
     dlib::shape_predictor shapePredictor;       // Tool for prediction face landmark positions from face bounding box.
 };

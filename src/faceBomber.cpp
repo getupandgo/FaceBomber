@@ -5,17 +5,17 @@ FaceBomber::FaceBomber() : faceDetector(dlib::get_frontal_face_detector()) {
     getAllFacesForBombing();
 }
 
-void FaceBomber::doFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath) {
-
+void FaceBomber::doFancyFaceBomb(const std::string imagePath, const std::vector<std::string> newFaces) {
+    dlib::array2d<dlib::rgb_pixel> targetImage;
     //loading and scaling up target image
     dlib::load_image(targetImage, imagePath);
     pyramid_up(targetImage);
 
-    if (newFacesPath.size()) {
+    if (newFaces.size()) {
         std::cout << "No mask faces provided" << std::endl;
         throw "no faces found";
-    } else if (newFacesPath.size() > 1) {
-        std::cout << "using only first face for now: " << newFacesPath[0] << std::endl;
+    } else if (newFaces.size() > 1) {
+        std::cout << "using only first face for now: " << newFaces[0] << std::endl;
     }
 
     std::vector<cv::Point2i> maskFaceShapes;
@@ -39,6 +39,61 @@ void FaceBomber::doFaceBomb(const std::string imagePath, const std::vector<std::
 
     std::cout << "Pause..." << std::endl;
     std::cin.get();
+}
+
+void FaceBomber::doUglyFaceBomb(const std::string imagePath, const std::vector<std::string> newFaces) {
+
+    if (!newFaces.size()) {
+        std::cout << "No mask faces provided" << std::endl;
+        throw "no mask provided";
+    } else {
+        std::cout << "using only first face for now: " << newFaces[0] << std::endl;
+    }
+    //loading image with new face
+    dlib::array2d<dlib::rgb_pixel> newImage;
+    dlib::load_image(newImage, imagePath);
+    std::vector<dlib::rectangle> newFaceArray = faceDetector(newImage);
+    dlib::rectangle newFace = newFaceArray[0];
+
+    //loading and scaling up (for detecting small faces) target image
+    dlib::array2d<dlib::rgb_pixel> targetImage;
+    dlib::load_image(targetImage, imagePath);
+    pyramid_up(targetImage);
+    std::vector<dlib::rectangle> detectedFaces = faceDetector(targetImage);
+
+    if (!newFaces.size()) {
+        std::cout << "No faces found" << std::endl;
+        throw "no faces found";
+    } else {
+        std::cout << "Number of faces detected: " << detectedFaces.size() << std::endl;
+    }
+
+    dlib::image_window win;
+
+    std::for_each(detectedFaces.begin(), detectedFaces.end(), [&](dlib::rectangle &detectedFace) {
+        std::cout << "scaling newface with width " << newFace.width() << " and height " << newFace.height() << " to " << detectedFace.width() << " " << detectedFace.height() << std::endl;
+        dlib::rectangle scaledNewFace = resize_rect(newFace, detectedFace.width(), detectedFace.height());
+        std::cout << "result: " << scaledNewFace.width() << " " << scaledNewFace.height() << std::endl;
+        std::cout << "moving newface from " << scaledNewFace.tl_corner().x() << " " << scaledNewFace.tl_corner().y() << " to " << detectedFace.tl_corner().x() << " " << detectedFace.tl_corner().y() << std::endl;
+        dlib::rectangle movedNewFace = move_rect(scaledNewFace, detectedFace.tl_corner());
+        std::cout << "result: " << movedNewFace.tl_corner().x() << " " << movedNewFace.tl_corner().y() << std::endl;
+        draw_rectangle(targetImage, movedNewFace, dlib::rgb_pixel(0,0,0), 0);
+
+//        win.clear_overlay();
+        win.set_image(targetImage);
+
+        std::cout << "Pause..." << std::endl;
+        std::cin.get();
+    });
+
+    //debug display
+//    dlib::image_window win;
+
+//    win.clear_overlay();
+//    win.set_image(targetImage);
+//
+//    std::cout << "Pause..." << std::endl;
+//    std::cin.get();
 }
 
 void FaceBomber::replaceFace(std::vector<cv::Point2i> currentFaceShapes, std::vector<cv::Point2i> maskFaceShapes) {
