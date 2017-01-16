@@ -4,10 +4,10 @@ project(FaceBomber)
 # path to folder containing dlib
 include(../../lib/dlib/dlib/cmake)
 
-find_package( OpenCV REQUIRED )
-if( OpenCV_FOUND )
-    include_directories( ${OpenCV_INCLUDE_DIRS} )
-endif( OpenCV_FOUND )
+find_package(OpenCV REQUIRED)
+if(OpenCV_FOUND)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+endif(OpenCV_FOUND)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
