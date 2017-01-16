@@ -12,8 +12,8 @@
 class FaceBomber {
 public:
     FaceBomber();
-    void doFancyFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath);
-    void doUglyFaceBomb(const std::string imagePath, const std::vector<std::string> newFacesPath);
+    void doFancyFaceBomb(const std::string targetImagePath, const std::vector<std::string> masks);
+    void doUglyFaceBomb(const std::string targetImagePath, const std::vector<std::string> masks);
     void addFaceForBombing(const std::string faceName, const std::string imagePath);
 private:
     // methods:
